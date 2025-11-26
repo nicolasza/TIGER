@@ -87,8 +87,11 @@ def get_node_ns(graph, k=3):
 
     nodes = []
     for i in range(k):
-        B = sparse_graph[:, nodes]
-        b = B * u[nodes]
+        if len(nodes) == 0:
+            b = np.zeros(len(u))
+        else:
+            B = sparse_graph[:, nodes]
+            b = np.asarray(B @ u[nodes]).flatten()
 
         score = v - 2 * b * u
         score[nodes] = -1

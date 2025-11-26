@@ -4,7 +4,10 @@ import platform
 import numpy as np
 import pandas as pd
 import networkx as nx
-from fa2 import ForceAtlas2
+try:
+    from fa2_modified import ForceAtlas2
+except ImportError:
+    from fa2 import ForceAtlas2
 import matplotlib.pyplot as plt
 from collections import defaultdict
 from scipy.interpolate import interp1d
