@@ -6,15 +6,16 @@ from scipy.sparse.linalg import eigsh
 
 
 def gpu_available():
-    from pip._internal.utils.misc import get_installed_distributions
-
-    gpu = False
-    installed_packages = [package.project_name for package in get_installed_distributions()]
-
-    if any("cupy" in s for s in installed_packages):
-        gpu = True
-
-    return gpu
+    """
+    Check if GPU acceleration is available via CuPy.
+    
+    :return: True if CuPy is installed, False otherwise
+    """
+    try:
+        import importlib.util
+        return importlib.util.find_spec("cupy") is not None
+    except ImportError:
+        return False
 
 
 def get_sparse_graph(graph):
@@ -25,7 +26,7 @@ def get_sparse_graph(graph):
     :return: Scipy sparse adjacency matrix
     """
 
-    return nx.to_scipy_sparse_matrix(graph, format='csr', dtype=float, nodelist=graph.nodes)
+    return nx.to_scipy_sparse_array(graph, format='csr', dtype=float, nodelist=graph.nodes)
 
 
 def get_adjacency_spectrum(graph, k=np.inf, eigvals_only=False, which='LA', use_gpu=False):
@@ -45,7 +46,7 @@ def get_adjacency_spectrum(graph, k=np.inf, eigvals_only=False, which='LA', use_
         eigpairs = eigh(A, eigvals_only=eigvals_only)
 
     else:
-        A = nx.to_scipy_sparse_matrix(graph, format='csr', dtype=np.float, nodelist=graph.nodes)
+        A = nx.to_scipy_sparse_array(graph, format='csr', dtype=float, nodelist=graph.nodes)
 
         if gpu_available() and use_gpu:
             import cupy as cp
@@ -101,8 +102,8 @@ def get_laplacian(graph):
     :param graph: undirected NetworkX graph
     :return: Scipy sparse Laplacian matrix
     """
-    A = nx.to_scipy_sparse_matrix(graph, format='csr', dtype=np.float, nodelist=graph.nodes)
-    D = sparse.spdiags(data=A.sum(axis=1).flatten(), diags=[0], m=len(graph), n=len(graph), format='csr')
+    A = nx.to_scipy_sparse_array(graph, format='csr', dtype=float, nodelist=graph.nodes)
+    D = sparse.spdiags(data=np.asarray(A.sum(axis=1)).flatten(), diags=[0], m=len(graph), n=len(graph), format='csr')
     L = D - A
 
     return L

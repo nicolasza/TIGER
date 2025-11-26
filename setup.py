@@ -3,10 +3,10 @@ import subprocess
 from setuptools import find_packages, setup
 
 # run "git tag <version>" and then "git push origin master <version> when releasing a package to PyPi
-version = "0.2.5"
+version = "0.3.0"
 
-subprocess.run(['pip', 'install', 'install', 'Cython', 'datashader', 'scikit-image', 'tqdm', 'stopit', 'matplotlib',
-                'networkx', 'pillow', 'fa2', 'ffmpeg-python', 'pytest'])
+subprocess.run(['pip', 'install', 'Cython', 'datashader', 'dask', 'scikit-image', 'tqdm', 'stopit', 'matplotlib',
+                'networkx', 'pillow', 'fa2-modified', 'ffmpeg-python', 'pytest'])
 
 keywords = ["data-science",
             "machine-learning",
@@ -46,5 +46,9 @@ setup(
     classifiers=["Development Status :: 3 - Alpha",
                  "Intended Audience :: Developers",
                  "License :: OSI Approved :: MIT License",
-                 "Programming Language :: Python :: 3.8"],
+                 "Programming Language :: Python :: 3.8",
+                 "Programming Language :: Python :: 3.9",
+                 "Programming Language :: Python :: 3.10",
+                 "Programming Language :: Python :: 3.11",
+                 "Programming Language :: Python :: 3.12"],
 )
